@@ -9,6 +9,8 @@ const multer  = require('multer')
 const crypto = require('crypto');
 const path = require('path');
 const upload = require('../config/multer');
+
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -214,4 +216,4 @@ function isloggedIn(req, res, next) {
 //   console.log('Server is running on http://localhost:3000');
 // });
 
-module.exports = app; // Export the app for testing or other purposes
+module.exports.handler = serverless(app); // Export the app for testing or other purposes
