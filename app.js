@@ -213,3 +213,5 @@ function isloggedIn(req, res, next) {
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
+
+module.exports = app; // Export the app for testing or other purposes
