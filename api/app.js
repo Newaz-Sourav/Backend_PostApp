@@ -212,8 +212,8 @@ function isloggedIn(req, res, next) {
 }
 
 
-// app.listen(3000, () => {
-//   console.log('Server is running on http://localhost:3000');
-// });
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
 
-module.exports.handler = serverless(app); // Export the app for testing or other purposes
+module.exports = app // Export the app for testing or other purposes
