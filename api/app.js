@@ -209,7 +209,7 @@ function isloggedIn(req, res, next) {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(200).send("You are not logged in");
+    return res.status(401).send("You are not logged in");
   }
 
   try {
