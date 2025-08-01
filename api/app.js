@@ -21,7 +21,12 @@ connectDB();
 
 
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  const allPosts = Post.find().sort({ date: -1 });
+  allPosts.then(posts => {
+    res.status(200).json(posts);
+  }).catch(err => {
+    res.status(500).json({ error: 'Error fetching posts' });
+  });
 });
 
 // app.post('/upload', isloggedIn,upload.single('file'), async (req, res) => {
