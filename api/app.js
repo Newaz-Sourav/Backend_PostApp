@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:5173', 
   credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,48 +47,38 @@ app.get('/', async (req, res) => {
 
 app.post('/register', async (req, res) => {
   let { username, name, email, password, age } = req.body;
-    try {
-        if (!username || !name || !email || !password || !age) {
-            return res.status(400).json({ error: 'All fields are required' });
-        }
-
-       
-        const existingUser = await usermodel.findOne({ email });
-        if (existingUser)
-        {
-            return res.status(400).json({ error: 'User already exists' });
-        }
-
-        
-
-        bcrypt.genSalt(10, (err,salt)=>{
-
-            
-            if (err) {
-                return res.status(500).json({ error: 'Error generating salt' });
-            }
-
-            bcrypt.hash(password, salt, async (err, hash) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Error hashing password' });
-                }
-
-                password = hash;
-                
-                const newUser = new usermodel({ username, name, email, password, age });
-                await newUser.save();
-                let token = jwt.sign({email: email, userid: newUser._id },"shhh");
-                 res.cookie('token', token);
-                 //res.status(200).redirect('/profile');
-                // res.status(201).json({ message: 'User registered successfully' });
-
-            });
-        })
-
-    } catch (error) {
-        res.status(500).json({ error: 'Error registering user' });
+  try {
+    if (!username || !name || !email || !password || !age) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-})
+
+    const existingUser = await usermodel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new usermodel({ username, name, email, password: hashedPassword, age });
+    await newUser.save();
+
+    const token = jwt.sign({ email: email, userid: newUser._id }, "shhh");
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true, // ✅ HTTPS ছাড়া local এ কাজ করবে না
+      sameSite: 'None' // ✅ Cross-origin এ কাজ করার জন্য
+    });
+
+    res.status(201).json({ message: 'User registered successfully' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error registering user' });
+  }
+});
+
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body; 
