@@ -20,16 +20,13 @@ connectDB();
 
 
 
-app.get('/', (req, res) => {
- 
-  const allPosts = Post.find().populate('user', 'username name').sort({ date: -1 });
-
- 
-  allPosts.then(posts => {
-    res.status(200).json(posts);
-  }).catch(err => {
-    res.status(500).json({ error: 'Error fetching posts' });
-  });
+app.get('/', async (req, res) => {
+  try {
+    const allPosts = await Post.find().populate('user', 'username name');
+    res.status(200).json(allPosts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // app.post('/upload', isloggedIn,upload.single('file'), async (req, res) => {
