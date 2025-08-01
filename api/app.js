@@ -21,7 +21,10 @@ connectDB();
 
 
 app.get('/', (req, res) => {
-  const allPosts = Post.find().sort({ date: -1 });
+ 
+  const allPosts = Post.find().populate('user', 'username name').sort({ date: -1 });
+
+ 
   allPosts.then(posts => {
     res.status(200).json(posts);
   }).catch(err => {
