@@ -19,10 +19,10 @@ app.use(cors({
   credentials: true, 
 }));
 
-app.options('*', cors({
-  origin: true,
-  credentials: true,
-}));
+// app.options('*', cors({
+//   origin: true,
+//   credentials: true,
+// }));
 
 
 app.use(express.json());
