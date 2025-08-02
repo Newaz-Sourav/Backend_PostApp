@@ -15,7 +15,10 @@ const cors = require('cors');
 const app = express();
 app.use(cors({
   origin: 'http://localhost:5173', 
-  credentials: true
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  secure: true,
+  sameSite: 'none'
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -79,12 +82,10 @@ app.post('/register', async (req, res) => {
                 let token = jwt.sign({email: email, userid: newUser._id },"shhh");
 
                  res.cookie('token', token, {
+                  secure: true,
+                  sameSite: 'none',
                   httpOnly: true,
-                  secure: false,
-                  sameSite: 'Lax',
                 });
-
-
 
                 res.status(201).json({ message: 'User registered successfully' });
 
