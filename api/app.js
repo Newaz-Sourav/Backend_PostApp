@@ -79,7 +79,11 @@ app.post('/register', async (req, res) => {
 
                 let token = jwt.sign({email: email, userid: newUser._id },"shhh");
 
-                 res.cookie('token', token,);
+                 res.cookie('token', token, {
+                 httpOnly: true,
+                  secure: false,      
+                  sameSite: 'Lax'       
+                  });
 
                 res.status(201).json({ message: 'User registered' });
 
