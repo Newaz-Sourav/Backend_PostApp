@@ -13,15 +13,17 @@ const cors = require('cors');
 
 
 const app = express();
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  credentials: true, 
-}));
 
-app.options('*', cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+// app.use(cors({
+//   origin: 'http://localhost:5173', 
+//   credentials: true, 
+// }));
+
+// app.options('*', cors({
+//   origin: 'http://localhost:5173',
+//   credentials: true,
+// }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -89,7 +91,7 @@ app.post('/register', async (req, res) => {
                  httpOnly: true,
                   secure: false,      
                   sameSite: 'Lax',
-                  maxAge: 7 * 24 * 60 * 60 * 1000       
+                  maxAge: 7 * 24 * 60 * 60 * 1000      
                   });
 
                 res.status(201).json({ message: 'User registered' });
@@ -237,7 +239,7 @@ function isloggedIn(req, res, next) {
 
 
 app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+  console.log('Server is running');
 });
 
 module.exports = app // Export the app for testing or other purposes
