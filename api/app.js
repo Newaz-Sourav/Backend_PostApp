@@ -17,8 +17,8 @@ app.use(cors({
   origin: 'http://localhost:5173', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  secure: true,
-  sameSite: 'none'
+  secure: false,
+  sameSite: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -79,11 +79,12 @@ app.post('/register', async (req, res) => {
                 
                 const newUser = new usermodel({ username, name, email, password, age });
                 await newUser.save();
+
                 let token = jwt.sign({email: email, userid: newUser._id },"shhh");
 
                  res.cookie('token', token, {
-                  secure: true,
-                  sameSite: 'none',
+                  secure: false,
+                  sameSite: true,
                   httpOnly: true,
                 });
 
@@ -120,8 +121,8 @@ app.post('/login', async (req, res) => {
 
       const token = jwt.sign({ email: user.email, userid: user._id }, "shhh");
       res.cookie('token', token);
-      res.status(200).redirect('/profile');
-      //res.status(200).json({ message: 'Login successful', token });
+      //res.status(200).redirect('/profile');
+      res.status(200).json({ message: 'Login successful', token });
     });
 
   } catch (error) {
