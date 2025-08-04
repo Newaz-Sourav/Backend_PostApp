@@ -123,7 +123,12 @@ app.post('/login', async (req, res) => {
       }
 
       const token = jwt.sign({ email: user.email, userid: user._id }, "shhh");
-      res.cookie('token', token);
+      res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true 
+      });
+
       //res.status(200).redirect('/profile');
       res.status(200).json({ message: 'Login successful', token });
     });
