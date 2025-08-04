@@ -32,7 +32,7 @@ connectDB();
 
 app.get('/', async (req, res) => {
   try {
-    const allPosts = await Post.find().populate('user', 'username name');
+    const allPosts = await Post.find().populate('user', 'username name').populate('likes', 'username name');;
     res.status(200).json(allPosts);
   } catch (err) {
     res.status(500).json({ error: err.message });
