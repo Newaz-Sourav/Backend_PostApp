@@ -229,6 +229,32 @@ app.get('/profile', isloggedIn, async (req, res) => {
     }
   });
 
+  
+app.delete('/delete/:id', isloggedIn, async (req, res) => {
+  const postId = req.params.id;
+  const userId = req.user.userid; // logged-in user id from JWT
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.author.toString() !== userId) {
+      return res.status(403).json({ error: "You are not authorized to delete this post" });
+    }
+
+    await Post.findByIdAndDelete(postId);
+
+    res.json({ message: "Post deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+
 function isloggedIn(req, res, next) {
   const token = req.cookies.token;
 
