@@ -166,7 +166,9 @@ app.get('/profile', isloggedIn, async (req, res) => {
     content: user.posts.map(post => ({
       id: post._id,
       content: post.content,
-      date: post.date
+      date: post.date,
+      user:post.user,
+      likes:post.likes
     }))
   });
 
